@@ -12,6 +12,8 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 ==============================================================================*/
+#include <iostream>
+#include <time.h>
 
 #include "tensorflow/core/common_runtime/gpu/gpu_init.h"
 
@@ -65,6 +67,7 @@ Status EnablePeerAccess(gpu::Platform* platform, int device_count) {
 }
 
 static void InitGPU() {
+  std::cout<<"\n InitGPU()\n\n";
   auto result = gpu::MultiPlatformManager::PlatformWithName("CUDA");
   if (!result.ok()) {
     LOG(WARNING)
@@ -138,7 +141,11 @@ static void InitGPU() {
 }
 
 static bool InitModule() {
+  double START,END;
+  START = clock();
   InitGPU();
+  END = clock();
+  std::cout <<"\nInitGPU:"<<(END - START)/CLOCKS_PER_SEC<<" seconds\n\n";
   return true;
 }
 
