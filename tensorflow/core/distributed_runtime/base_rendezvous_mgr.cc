@@ -264,7 +264,6 @@ void BaseRemoteRendezvous::RecvAsync(const ParsedKey& parsed,
           };
 
           if (s.ok()) {
-			std::cout<<"\n call SameWorkerRecvDone\n\n";
             SameWorkerRecvDone(parsed_copy, send_args, recv_args, in, out,
                                std::move(final_callback));
           } else {
