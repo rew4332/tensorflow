@@ -103,7 +103,7 @@ void IntraProcessRendezvous::SameWorkerRecvDone(
   Tensor copy(out_allocator, in.dtype(), in.shape());
   *out = copy;
   
-  std::cout<<"\n\ncall ViaDMA in SameWorkerRecvDone\n\n";
+  //std::cout<<"\n\ncall ViaDMA in SameWorkerRecvDone\n\n";
   CopyTensor::ViaDMA(parsed.edge_name, send_args.device_context,
                      recv_args.device_context, src_device, dst_device,
                      send_args.alloc_attrs, recv_args.alloc_attrs, &in, out,
