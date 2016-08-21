@@ -351,7 +351,11 @@ Status DirectSession::Run(const RunOptions& run_options,
   }
 
   for (const auto& item : executors_and_keys->items) {
+	double START,END;
+	START = clock();
     item.executor->RunAsync(args, barrier->Get());
+	END = clock();
+    std::cout <<"\nRunAsync:"<<(END - START)/CLOCKS_PER_SEC<<" seconds\n\n";
   }
 
   WaitForNotification(&run_state, run_options.timeout_in_ms() > 0
@@ -408,8 +412,12 @@ Status DirectSession::PRunSetup(const std::vector<string>& input_names,
   ExecutorsAndKeys* executors_and_keys;
   RunStateArgs run_state_args;
   run_state_args.is_partial_run = true;
+  double START,END;
+  START = clock();
   Status s = GetOrCreateExecutors(pool, input_names, output_names, target_nodes,
                                   &executors_and_keys, &run_state_args);
+  END = clock();
+  std::cout <<"\nGetOrCreateExecutors:"<<(END - START)/CLOCKS_PER_SEC<<" seconds\n\n";
   TF_RETURN_IF_ERROR(s);
 
   // Create the run state and save it for future PRun calls.
@@ -512,11 +520,19 @@ Status DirectSession::PRun(const string& handle, const NamedTensorList& inputs,
       CheckFetch(inputs, output_names, executors_and_keys, run_state));
 
   // Send inputs.
+  double START,END;
+  START = clock();
   Status s = SendInputs(inputs, executors_and_keys, run_state->rendez);
+  END = clock();
+  std::cout <<"\nSendInputs:"<<(END - START)/CLOCKS_PER_SEC<<" seconds\n\n";
 
   // Receive outputs.
   if (s.ok()) {
+	double START,END;
+	START = clock();
     s = RecvOutputs(output_names, executors_and_keys, run_state, outputs);
+	END = clock();
+	std::cout <<"\nRecvOutputs:"<<(END - START)/CLOCKS_PER_SEC<<" seconds\n\n";
   }
 
   // Save the output tensors of this run we choose to keep.

@@ -23,6 +23,7 @@ import re
 import threading
 
 import numpy as np
+import time
 
 from tensorflow.core.protobuf import config_pb2
 from tensorflow.python import pywrap_tensorflow as tf_session
@@ -597,6 +598,7 @@ class BaseSession(SessionInterface):
     return ops.default_session(self)
 
   def run(self, fetches, feed_dict=None, options=None, run_metadata=None):
+    tStart = time.time()#time start
     """Runs operations and evaluates tensors in `fetches`.
 
     This method runs one "step" of TensorFlow computation, by
@@ -715,6 +717,8 @@ class BaseSession(SessionInterface):
       tf_session.TF_DeleteBuffer(run_metadata_ptr)
       if options:
         tf_session.TF_DeleteBuffer(options_ptr)
+	tEnd = time.time()#time end
+	print ('run %f seconds' % (tEnd - tStart))
     return result
 
   def partial_run(self, handle, fetches, feed_dict=None):
