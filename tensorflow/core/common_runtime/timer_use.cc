@@ -4,6 +4,8 @@
 
 namespace tensorflow
 {
+	int timer_use::n = 0;
+
 	timer_use::timer_use()
 	{
 		tInitGPU = 0;
@@ -43,6 +45,11 @@ namespace tensorflow
 
     void timer_use::hello()
     {
-        std::cout<<"\n\nhello\n\n";
+		timer_use::n++;
+        std::cout<<"\n\nhello hello hello timer_user.cc\n\n";
     }
+	int timer_use::get()
+	{
+		return timer_use::n;
+	}
 }

@@ -18,7 +18,9 @@ namespace tensorflow
 		double initGPU();
 		void initGPUStart();
 		void initGPUEnd();
-        void hello();
+
+        static void hello();
+		static int get();
 
 		double memcpyHostToDevice();
 		void memcpyHostToDeviceStart();
@@ -26,6 +28,7 @@ namespace tensorflow
 
 	private:
 		double tInitGPU;
+		static int n;
 		clock_t tInitGPUStartStamp;
 		clock_t tInitGPUEndStamp;
 		
