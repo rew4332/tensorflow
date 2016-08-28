@@ -69,14 +69,10 @@ Status EnablePeerAccess(gpu::Platform* platform, int device_count) {
 }
 
 static void InitGPU() {
-<<<<<<< HEAD
-  //timer_use* x = new timer_use();
-  //x->hello();
-
   std::cout<<"\n InitGPU()\n\n";
-=======
-  //std::cout<<"\n InitGPU()\n\n";
->>>>>>> 216e0579827fdb3d705311f0587b595058cfba2a
+  timer_use* x = new timer_use();
+  x->hello();
+
   auto result = gpu::MultiPlatformManager::PlatformWithName("CUDA");
   if (!result.ok()) {
     LOG(WARNING)
