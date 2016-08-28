@@ -293,15 +293,15 @@ Status DirectSession::Run(const RunOptions& run_options,
   if (!run_options.debug_tensor_watch_opts().empty()) {
     run_state_args.debug_tensor_watches = run_options.debug_tensor_watch_opts();
   }
-  double START,END;
-  START = clock();
+  //double START,END;
+  //START = clock();
   
   
   TF_RETURN_IF_ERROR(
       GetOrCreateExecutors(pool, input_tensor_names, output_names, target_nodes,
                            &executors_and_keys, &run_state_args));
-  END = clock();
-  std::cout <<"\nGetOrCreateExecutors:"<<(END - START)/CLOCKS_PER_SEC<<" seconds\n\n";
+  //END = clock();
+  //std::cout <<"\nGetOrCreateExecutors:"<<(END - START)/CLOCKS_PER_SEC<<" seconds\n\n";
   
   // Create a run state and start execution.
   RunState run_state(input_tensor_names, output_names);
@@ -309,10 +309,10 @@ Status DirectSession::Run(const RunOptions& run_options,
 
   // Send inputs.
   
-  START = clock();
+  //START = clock();
   TF_RETURN_IF_ERROR(SendInputs(inputs, executors_and_keys, run_state.rendez));
-  END = clock();
-  std::cout <<"\nSendInputs:"<<(END - START)/CLOCKS_PER_SEC<<" seconds\n\n";
+  //END = clock();
+  //std::cout <<"\nSendInputs:"<<(END - START)/CLOCKS_PER_SEC<<" seconds\n\n";
 
   // Start parallel Executors.
   const int num_executors = executors_and_keys->items.size();
@@ -361,10 +361,10 @@ Status DirectSession::Run(const RunOptions& run_options,
 
   for (const auto& item : executors_and_keys->items) {
 	
-	START = clock();
+	//START = clock();
     item.executor->RunAsync(args, barrier->Get());
-	END = clock();
-    std::cout <<"\nRunAsync:"<<(END - START)/CLOCKS_PER_SEC<<" seconds\n\n";
+	//END = clock();
+    //std::cout <<"\nRunAsync:"<<(END - START)/CLOCKS_PER_SEC<<" seconds\n\n";
   }
 
   WaitForNotification(&run_state, run_options.timeout_in_ms() > 0
@@ -383,11 +383,11 @@ Status DirectSession::Run(const RunOptions& run_options,
 
   // Receive outputs.
   
-  START = clock();
+  //START = clock();
   TF_RETURN_IF_ERROR(
       RecvOutputs(output_names, executors_and_keys, &run_state, outputs));
-  END = clock();
-  std::cout <<"\nRecvOutputs:"<<(END - START)/CLOCKS_PER_SEC<<" seconds\n\n";
+  //END = clock();
+  //std::cout <<"\nRecvOutputs:"<<(END - START)/CLOCKS_PER_SEC<<" seconds\n\n";
   
   // Save the output tensors of this run we choose to keep.
   TF_RETURN_IF_ERROR(
