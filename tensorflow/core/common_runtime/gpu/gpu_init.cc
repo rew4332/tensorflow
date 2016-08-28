@@ -25,6 +25,8 @@ limitations under the License.
 #include "tensorflow/core/platform/logging.h"
 #include "tensorflow/core/platform/stream_executor.h"
 #include "tensorflow/core/platform/types.h"
+//#include "tensorflow/core/common_runtime/timer_use.h"
+
 
 namespace gpu = ::perftools::gputools;
 
@@ -67,6 +69,9 @@ Status EnablePeerAccess(gpu::Platform* platform, int device_count) {
 }
 
 static void InitGPU() {
+  //timer_use* x = new timer_use();
+  //x->hello();
+
   std::cout<<"\n InitGPU()\n\n";
   auto result = gpu::MultiPlatformManager::PlatformWithName("CUDA");
   if (!result.ok()) {
