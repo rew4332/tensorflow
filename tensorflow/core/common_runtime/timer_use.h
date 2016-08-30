@@ -15,22 +15,22 @@ namespace tensorflow
 	{
 	public:
 		timer_use();
-		double initGPU();
-		void initGPUStart();
-		void initGPUEnd();
+		static double initGPU();
+		static void initGPUStart();
+		static void initGPUEnd();
 
-        static void hello();
-		static int get();
+                static void hello();
+		static double get();
 
 		double memcpyHostToDevice();
 		void memcpyHostToDeviceStart();
 		void memcpyHostToDeviceEnd();
 
 	private:
-		double tInitGPU;
-		static int n;
-		clock_t tInitGPUStartStamp;
-		clock_t tInitGPUEndStamp;
+		static double tInitGPU;
+		static double n;
+		static clock_t tInitGPUStartStamp;
+		static clock_t tInitGPUEndStamp;
 		
 		double tMemH2D;
 		clock_t tMemH2DStartStamp;

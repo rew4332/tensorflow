@@ -19,6 +19,7 @@ limitations under the License.
 #include "tensorflow/core/framework/tensor.h"
 #include "tensorflow/core/framework/types.h"
 #include "tensorflow/core/platform/stream_executor.h"
+#include "tensorflow/core/common_runtime/timer_use.h"
 
 namespace tensorflow {
 
@@ -28,7 +29,10 @@ void GPUDeviceContext::CopyCPUTensorToDevice(const Tensor* cpu_tensor,
                                              StatusCallback done) const {
   //std::cout<<"\nCopyCPUTensorToDevice\n\n";
   //std::cout<<">";
+	timer_use::initGPUStart();
   GPUUtil::CopyCPUTensorToGPU(cpu_tensor, this, device, device_tensor, done);
+	timer_use::initGPUEnd();
+	std::cout<<"\n copyH2D time:"<<timer_use::initGPU()<<"\n\n";
 }
 
 void GPUDeviceContext::CopyDeviceTensorToCPU(const Tensor* device_tensor,

@@ -4,7 +4,10 @@
 
 namespace tensorflow
 {
-	int timer_use::n = 0;
+	double timer_use::n = 0;
+        clock_t timer_use::tInitGPUStartStamp = 0;
+	clock_t timer_use::tInitGPUEndStamp = 0;
+	double timer_use::tInitGPU = 0;
 
 	timer_use::timer_use()
 	{
@@ -14,18 +17,18 @@ namespace tensorflow
 
 	double timer_use::initGPU()
 	{
-		return this->tInitGPU;
+		return timer_use::tInitGPU;
 	}
 
 	void timer_use::initGPUStart()
 	{
-		tInitGPUStartStamp = clock();
+		timer_use::tInitGPUStartStamp = clock();
 	}
 
 	void timer_use::initGPUEnd()
 	{
-		tInitGPUEndStamp = clock();
-		this->tInitGPU = tInitGPUEndStamp-tInitGPUStartStamp;
+		timer_use::tInitGPUEndStamp = clock();
+		timer_use::tInitGPU+=(double)(timer_use::tInitGPUEndStamp-timer_use::tInitGPUStartStamp)/CLOCKS_PER_SEC;
 	}
 	
 	double timer_use::memcpyHostToDevice()
@@ -43,12 +46,12 @@ namespace tensorflow
 		//self.tMemH2D += now() - tInitGPUStartStamp;
 	}
 
-    void timer_use::hello()
-    {
-		timer_use::n++;
-        std::cout<<"\n\nhello hello hello timer_user.cc\n\n";
-    }
-	int timer_use::get()
+        void timer_use::hello()
+        { 
+		timer_use::n=1;
+                //std::cout<<"\n\nhello hello hello timer_use.cc\n\n";
+        }
+	double timer_use::get()
 	{
 		return timer_use::n;
 	}
