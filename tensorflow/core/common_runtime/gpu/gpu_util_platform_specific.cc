@@ -32,7 +32,6 @@ void GPUDeviceContext::CopyCPUTensorToDevice(const Tensor* cpu_tensor,
 	timer_use::initGPUStart();
   GPUUtil::CopyCPUTensorToGPU(cpu_tensor, this, device, device_tensor, done);
 	timer_use::initGPUEnd();
-	std::cout<<"\n copyH2D time:"<<timer_use::initGPU()<<"\n\n";
 }
 
 void GPUDeviceContext::CopyDeviceTensorToCPU(const Tensor* device_tensor,

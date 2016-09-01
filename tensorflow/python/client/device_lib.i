@@ -80,3 +80,17 @@ def list_devices():
 %unignoreall
 
 %newobject tensorflow::SessionOptions;
+
+// add my timer
+
+%{
+#include "tensorflow/core/common_runtime/timer_use.h"
+%}
+
+%ignoreall
+%unignore tensorflow;
+%unignore tensorflow::timer_use;
+%unignore tensorflow::timer_use::initGPU;
+%include "tensorflow/core/common_runtime/timer_use.h"
+%unignoreall
+

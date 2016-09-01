@@ -463,7 +463,6 @@ class BaseSession(SessionInterface):
         creating the TensorFlow session.
       TypeError: If one of the arguments has the wrong type.
     """
-    print("\n\nhello hello \n\n")
     if graph is None:
       self._graph = ops.get_default_graph()
     else:
