@@ -14,26 +14,30 @@ namespace tensorflow
 	class timer_use
 	{
 	public:
-		timer_use();
-		static double initGPU();
+		
+		static double getInitGPU();
 		static void initGPUStart();
-		static void initGPUEnd();
+		static void initGPUStop();
 
-                static void hello();
-		static double get();
-
-		double memcpyHostToDevice();
-		void memcpyHostToDeviceStart();
-		void memcpyHostToDeviceEnd();
+		static double getMemH2D();
+		static void memH2DStart();
+		static void memH2DStop();
+		
+		static double getMemD2H();
+		static void memD2HStart();
+		static void memD2HStop();
 
 	private:
 		static double tInitGPU;
-		static double n;
 		static clock_t tInitGPUStartStamp;
-		static clock_t tInitGPUEndStamp;
+		static clock_t tInitGPUStopStamp;
 		
-		double tMemH2D;
-		clock_t tMemH2DStartStamp;
-		clock_t tMemH2DEndStamp;
+		static double tMemH2D;
+		static clock_t tMemH2DStartStamp;
+		static clock_t tMemH2DStopStamp;
+		
+		static double tMemD2H;
+		static clock_t tMemD2HStartStamp;
+		static clock_t tMemD2HStopStamp;
 	};
 }

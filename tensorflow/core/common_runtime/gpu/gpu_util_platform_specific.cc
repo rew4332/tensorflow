@@ -29,9 +29,9 @@ void GPUDeviceContext::CopyCPUTensorToDevice(const Tensor* cpu_tensor,
                                              StatusCallback done) const {
   //std::cout<<"\nCopyCPUTensorToDevice\n\n";
   //std::cout<<">";
-	timer_use::initGPUStart();
+	timer_use::memH2DStart();
   GPUUtil::CopyCPUTensorToGPU(cpu_tensor, this, device, device_tensor, done);
-	timer_use::initGPUEnd();
+	timer_use::memH2DStop();
 }
 
 void GPUDeviceContext::CopyDeviceTensorToCPU(const Tensor* device_tensor,
@@ -40,7 +40,9 @@ void GPUDeviceContext::CopyDeviceTensorToCPU(const Tensor* device_tensor,
                                              StatusCallback done) {
   //std::cout<<"\nCopyDeviceTensorToCPU\n\n";
   //std::cout<<"<";
+  timer_use::memD2HStart();
   GPUUtil::CopyGPUTensorToCPU(device, this, device_tensor, cpu_tensor, done);
+  timer_use::memD2HStop();
 }
 
 }  // namespace tensorflow

@@ -288,6 +288,7 @@ def main(argv=None):  # pylint: disable=unused-argument
     # Run all the initializers to prepare the trainable parameters.
     tf.initialize_all_variables().run()
     print('Initialized!')
+    print("\nInitGPU time:"+str(pywrap_tensorflow.timer_use.getInitGPU())+"sec\n")
     # Loop through training steps.
     for step in xrange(int(num_epochs * train_size) // BATCH_SIZE):
       # Compute the offset of the current minibatch in the data.
@@ -313,7 +314,8 @@ def main(argv=None):  # pylint: disable=unused-argument
         print('Minibatch error: %.1f%%' % error_rate(predictions, batch_labels))
         print('Validation error: %.1f%%' % error_rate(
             eval_in_batches(validation_data, sess), validation_labels))
-        print("Cumulative H2D time:"+str(pywrap_tensorflow.timer_use.initGPU())+"sec\n")
+        print("Cumulative H2D time:"+str(pywrap_tensorflow.timer_use.getMemH2D())+"sec")
+        print("Cumulative D2H time:"+str(pywrap_tensorflow.timer_use.getMemD2H())+"sec\n")
         sys.stdout.flush()
     # Finally print the result!
     test_error = error_rate(eval_in_batches(test_data, sess), test_labels)

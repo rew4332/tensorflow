@@ -4,18 +4,21 @@
 
 namespace tensorflow
 {
-	double timer_use::n = 0;
-        clock_t timer_use::tInitGPUStartStamp = 0;
-	clock_t timer_use::tInitGPUEndStamp = 0;
+	
+	clock_t timer_use::tInitGPUStartStamp = 0;
+	clock_t timer_use::tInitGPUStopStamp = 0;
 	double timer_use::tInitGPU = 0;
-
-	timer_use::timer_use()
-	{
-		tInitGPU = 0;
-		tMemH2D = 0;
-	}
-
-	double timer_use::initGPU()
+	
+	clock_t timer_use::tMemH2DStartStamp = 0;
+	clock_t timer_use::tMemH2DStopStamp = 0;
+	double timer_use::tMemH2D = 0;
+	
+	clock_t timer_use::tMemD2HStartStamp = 0;
+	clock_t timer_use::tMemD2HStopStamp = 0;
+	double timer_use::tMemD2H = 0;
+		
+	//GPU Init
+	double timer_use::getInitGPU()
 	{
 		return timer_use::tInitGPU;
 	}
@@ -25,34 +28,48 @@ namespace tensorflow
 		timer_use::tInitGPUStartStamp = clock();
 	}
 
-	void timer_use::initGPUEnd()
+	void timer_use::initGPUStop()
 	{
-		timer_use::tInitGPUEndStamp = clock();
-		timer_use::tInitGPU+=(double)(timer_use::tInitGPUEndStamp-timer_use::tInitGPUStartStamp)/CLOCKS_PER_SEC;
+		timer_use::tInitGPUStopStamp = clock();
+		double t = (double)(timer_use::tInitGPUStopStamp-timer_use::tInitGPUStartStamp)/CLOCKS_PER_SEC;
+		timer_use::tInitGPU+=t;
+		
 	}
 	
-	double timer_use::memcpyHostToDevice()
+	//H2D
+	double timer_use::getMemH2D()
 	{
-		return this->tMemH2D;
+		return timer_use::tMemH2D;
 	}
 
-	void timer_use::memcpyHostToDeviceStart()
+	void timer_use::memH2DStart()
 	{
-		//tMemH2DStartStamp = now();
+		timer_use::tMemH2DStartStamp = clock();
 	}
 
-	void timer_use::memcpyHostToDeviceEnd()
+	void timer_use::memH2DStop()
 	{
-		//self.tMemH2D += now() - tInitGPUStartStamp;
+		timer_use::tMemH2DStopStamp = clock();
+		double t = (double)(timer_use::tMemH2DStopStamp-timer_use::tMemH2DStartStamp)/CLOCKS_PER_SEC;
+		timer_use::tMemH2D+=t;
+	}
+	
+	//D2H
+	double timer_use::getMemD2H()
+	{
+		return timer_use::tMemD2H;
 	}
 
-        void timer_use::hello()
-        { 
-		timer_use::n=1;
-                //std::cout<<"\n\nhello hello hello timer_use.cc\n\n";
-        }
-	double timer_use::get()
+	void timer_use::memD2HStart()
 	{
-		return timer_use::n;
+		timer_use::tMemD2HStartStamp = clock();
 	}
+
+	void timer_use::memD2HStop()
+	{
+		timer_use::tMemD2HStopStamp = clock();
+		double t = (double)(timer_use::tMemD2HStopStamp-timer_use::tMemD2HStartStamp)/CLOCKS_PER_SEC;
+		timer_use::tMemD2H+=t;
+	}
+     
 }
