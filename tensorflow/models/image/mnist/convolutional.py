@@ -122,6 +122,7 @@ def error_rate(predictions, labels):
 
 
 def main(argv=None):  # pylint: disable=unused-argument
+  mainStartStamp=time.time()
   if FLAGS.self_test:
     print('Running self-test.')
     train_data, train_labels = fake_data(256)
@@ -324,6 +325,9 @@ def main(argv=None):  # pylint: disable=unused-argument
       print('test_error', test_error)
       assert test_error == 0.0, 'expected 0.0 test_error, got %.2f' % (
           test_error,)
+  mainStopStamp=time.time()
+  main_elapse=mainStopStamp-mainStartStamp
+  print("\ntotal run time:"+str(main_elapse)+"sec\n")
 
 
 if __name__ == '__main__':
