@@ -56,6 +56,7 @@ limitations under the License.
 #include "tensorflow/core/platform/mutex.h"
 #include "tensorflow/core/platform/types.h"
 #include "tensorflow/core/util/device_name_utils.h"
+#include "tensorflow/core/common_runtime/timer_use.h"
 
 namespace tensorflow {
 
@@ -295,13 +296,14 @@ Status DirectSession::Run(const RunOptions& run_options,
   }
   //double START,END;
   //START = clock();
-  
-  
+  //std::cout <<"\nGetOrCreateExecutors:\n";
+  timer_use::createExeStart();
   TF_RETURN_IF_ERROR(
       GetOrCreateExecutors(pool, input_tensor_names, output_names, target_nodes,
                            &executors_and_keys, &run_state_args));
+  timer_use::createExeStop();
   //END = clock();
-  //std::cout <<"\nGetOrCreateExecutors:"<<(END - START)/CLOCKS_PER_SEC<<" seconds\n\n";
+  //std::cout <<"\nGetOrCreateExecutors:\n";
   
   // Create a run state and start execution.
   RunState run_state(input_tensor_names, output_names);
@@ -310,7 +312,9 @@ Status DirectSession::Run(const RunOptions& run_options,
   // Send inputs.
   
   //START = clock();
+  timer_use::sendInputStart();
   TF_RETURN_IF_ERROR(SendInputs(inputs, executors_and_keys, run_state.rendez));
+  timer_use::sendInputStop();
   //END = clock();
   //std::cout <<"\nSendInputs:"<<(END - START)/CLOCKS_PER_SEC<<" seconds\n\n";
 
@@ -359,6 +363,7 @@ Status DirectSession::Run(const RunOptions& run_options,
     if (tracer) tracer->Start();
   }
 
+  timer_use::runAsyncStart();
   for (const auto& item : executors_and_keys->items) {
 	
 	//START = clock();
@@ -366,6 +371,7 @@ Status DirectSession::Run(const RunOptions& run_options,
 	//END = clock();
     //std::cout <<"\nRunAsync:"<<(END - START)/CLOCKS_PER_SEC<<" seconds\n\n";
   }
+  timer_use::runAsyncStop();
 
   WaitForNotification(&run_state, run_options.timeout_in_ms() > 0
                                       ? run_options.timeout_in_ms()
@@ -384,8 +390,10 @@ Status DirectSession::Run(const RunOptions& run_options,
   // Receive outputs.
   
   //START = clock();
+  timer_use::recvOutputStart();
   TF_RETURN_IF_ERROR(
       RecvOutputs(output_names, executors_and_keys, &run_state, outputs));
+  timer_use::recvOutputStop();
   //END = clock();
   //std::cout <<"\nRecvOutputs:"<<(END - START)/CLOCKS_PER_SEC<<" seconds\n\n";
   

@@ -93,6 +93,10 @@ def list_devices():
 %unignore tensorflow::timer_use::getInitGPU;
 %unignore tensorflow::timer_use::getMemH2D;
 %unignore tensorflow::timer_use::getMemD2H;
+%unignore tensorflow::timer_use::getCreateExe;
+%unignore tensorflow::timer_use::getSendInput;
+%unignore tensorflow::timer_use::getRecvOutput;
+%unignore tensorflow::timer_use::getRunAsync;
 %include "tensorflow/core/common_runtime/timer_use.h"
 %unignoreall
 

@@ -122,6 +122,9 @@ def error_rate(predictions, labels):
 
 
 def main(argv=None):  # pylint: disable=unused-argument
+  print("\ntimeStart:")
+  #print(pywrap_tensorflow.timer_use.op.getAdd())
+  #print("\n")
   mainStartStamp=time.time()
   if FLAGS.self_test:
     print('Running self-test.')
@@ -315,8 +318,8 @@ def main(argv=None):  # pylint: disable=unused-argument
         print('Minibatch error: %.1f%%' % error_rate(predictions, batch_labels))
         print('Validation error: %.1f%%' % error_rate(
             eval_in_batches(validation_data, sess), validation_labels))
-        print("Cumulative H2D time:"+str(pywrap_tensorflow.timer_use.getMemH2D())+"sec")
-        print("Cumulative D2H time:"+str(pywrap_tensorflow.timer_use.getMemD2H())+"sec\n")
+        #print("Cumulative H2D time:"+str(pywrap_tensorflow.timer_use.getMemH2D())+"sec")
+        #print("Cumulative D2H time:"+str(pywrap_tensorflow.timer_use.getMemD2H())+"sec\n")
         sys.stdout.flush()
     # Finally print the result!
     test_error = error_rate(eval_in_batches(test_data, sess), test_labels)
@@ -327,7 +330,13 @@ def main(argv=None):  # pylint: disable=unused-argument
           test_error,)
   mainStopStamp=time.time()
   main_elapse=mainStopStamp-mainStartStamp
-  print("\ntotal run time:"+str(main_elapse)+"sec\n")
+  print("\nTotal H2D time:"+str(pywrap_tensorflow.timer_use.getMemH2D())+"sec\n")
+  print("Total D2H time:"+str(pywrap_tensorflow.timer_use.getMemD2H())+"sec\n")
+  print("Total getOrCreateExecutor time:"+str(pywrap_tensorflow.timer_use.getCreateExe())+"sec\n")
+  print("Total sendInput time:"+str(pywrap_tensorflow.timer_use.getSendInput())+"sec\n")
+  print("Total receiveOuput time:"+str(pywrap_tensorflow.timer_use.getRecvOutput())+"sec\n")
+  print("Total RunAsync time:"+str(pywrap_tensorflow.timer_use.getRunAsync())+"sec\n")
+  print("Total run time:"+str(main_elapse)+"sec\n")
 
 
 if __name__ == '__main__':
