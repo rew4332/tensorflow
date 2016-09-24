@@ -32,7 +32,9 @@ namespace tensorflow
 	double timer_use::tRunAsync = 0;
 	clock_t timer_use::tRunAsyncStartStamp = 0;
 	clock_t timer_use::tRunAsyncStopStamp = 0;
-		
+	
+	double timer_use::tArgmax = 0;
+	
 	//GPU Init
 	double timer_use::getInitGPU()
 	{
@@ -159,6 +161,24 @@ namespace tensorflow
 		timer_use::tRunAsyncStopStamp = clock();
 		double t = (double)(timer_use::tRunAsyncStopStamp-timer_use::tRunAsyncStartStamp)/CLOCKS_PER_SEC;
 		timer_use::timer_use::tRunAsync+=t;
+	}
+	
+	//op
+	void timer_use::setOpTime(int opNum,double period)
+	{
+		if(opNum==0){
+			timer_use::tArgmax+=period;
+		}
+	}
+	double timer_use::getOpTime(int opNum)
+	{
+		switch(opNum)
+		{
+			case 0:
+				return timer_use::tArgmax;
+				break;
+		}
+		return -1;
 	}
 	
      

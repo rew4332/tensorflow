@@ -34,6 +34,7 @@ limitations under the License.
 #include "tensorflow/core/kernels/bounds_check.h"
 #include "tensorflow/core/platform/logging.h"
 #include "tensorflow/core/platform/macros.h"
+#include "tensorflow/core/common_runtime/timer_use.h"
 
 namespace tensorflow {
 
@@ -46,6 +47,7 @@ class ArgOp : public OpKernel {
   explicit ArgOp(OpKernelConstruction* context) : OpKernel(context) {}
 
   void Compute(OpKernelContext* context) override {
+	clock_t startStamp = clock();
     const Tensor& input = context->input(0);
     const Tensor& dimension = context->input(1);
 
@@ -93,6 +95,10 @@ class ArgOp : public OpKernel {
                     errors::InvalidArgument(
                         "ArgOp : Unhandled input dimensions: ", input_dims));
     }
+	clock_t stopStamp= clock();
+	double period = (double)(stopStamp-startStamp)/CLOCKS_PER_SEC;
+	timer_use::setOpTime(0,period);
+	//std::cout<<"\nArgmax time:"<<timer_use::getOpTime(0)<<std::endl;
   }
 #undef HANDLE_DIM
 

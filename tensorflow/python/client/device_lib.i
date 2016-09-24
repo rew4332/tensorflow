@@ -97,6 +97,7 @@ def list_devices():
 %unignore tensorflow::timer_use::getSendInput;
 %unignore tensorflow::timer_use::getRecvOutput;
 %unignore tensorflow::timer_use::getRunAsync;
+%unignore tensorflow::timer_use::getOpTime;
 %include "tensorflow/core/common_runtime/timer_use.h"
 %unignoreall
 

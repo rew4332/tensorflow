@@ -43,7 +43,10 @@ namespace tensorflow
 		static void runAsyncStart();
 		static void runAsyncStop();
 		
+		static void setOpTime(int,double);
+		static double getOpTime(int);
 		
+
 		
 
 	private:
@@ -74,5 +77,7 @@ namespace tensorflow
 		static double tRunAsync;
 		static clock_t tRunAsyncStartStamp;
 		static clock_t tRunAsyncStopStamp;
+		
+		static double tArgmax;
 	};
 }
