@@ -29,6 +29,7 @@ limitations under the License.
 #include "tensorflow/core/kernels/bounds_check.h"
 #include "tensorflow/core/kernels/fill_functor.h"
 #include "tensorflow/core/platform/macros.h"
+#include "tensorflow/core/common_runtime/timer_use.h"
 
 namespace tensorflow {
 
@@ -123,6 +124,7 @@ class FillOp : public OpKernel {
   explicit FillOp(OpKernelConstruction* context) : OpKernel(context) {}
 
   void Compute(OpKernelContext* context) override {
+	clock_t startStamp = clock();  
     const Tensor& Tdims = context->input(0);
     OP_REQUIRES(
         context, IsLegacyVector(Tdims.shape()),
@@ -142,6 +144,9 @@ class FillOp : public OpKernel {
     functor::FillFunctor<Device, T> functor;
     functor(context->eigen_device<Device>(), out->flat<T>(),
             Tvalue.scalar<T>());
+	clock_t stopStamp= clock();
+	double period = (double)(stopStamp-startStamp)/CLOCKS_PER_SEC;
+	timer_use::setOpTime(7,period);
   }
 };
 
@@ -224,6 +229,7 @@ class PlaceholderOp : public OpKernel {
   }
 
   void Compute(OpKernelContext* ctx) override {
+	clock_t startStamp = clock();  
     if (expected_shape_.dims() > 0) {
       OP_REQUIRES(ctx, false,
                   errors::InvalidArgument(
@@ -236,6 +242,9 @@ class PlaceholderOp : public OpKernel {
                       "You must feed a value for placeholder tensor '", name(),
                       "' with dtype ", DataTypeString(output_type(0))));
     }
+	clock_t stopStamp= clock();
+	double period = (double)(stopStamp-startStamp)/CLOCKS_PER_SEC;
+	timer_use::setOpTime(5,period);
   }
 
  private:

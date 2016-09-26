@@ -27,6 +27,7 @@ limitations under the License.
 #include "tensorflow/core/framework/tensor.h"
 #include "tensorflow/core/kernels/relu_op_functor.h"
 #include "tensorflow/core/lib/core/errors.h"
+#include "tensorflow/core/common_runtime/timer_use.h"
 
 namespace tensorflow {
 
@@ -36,9 +37,13 @@ class ReluOp : public UnaryElementWiseOp<T, ReluOp<Device, T>> {
   using UnaryElementWiseOp<T, ReluOp<Device, T>>::UnaryElementWiseOp;
 
   void Operate(OpKernelContext* context, const Tensor& input, Tensor* output) {
+	clock_t startStamp = clock();
     functor::Relu<Device, T> functor;
     functor(context->eigen_device<Device>(), input.flat<T>(),
             output->flat<T>());
+	clock_t stopStamp= clock();
+	double period = (double)(stopStamp-startStamp)/CLOCKS_PER_SEC;
+	timer_use::setOpTime(16,period);
   }
 };
 
@@ -75,7 +80,11 @@ class ReluGradOp : public BinaryElementWiseOp<T, ReluGradOp<Device, T>> {
   template <int NDIMS>
   void Operate(OpKernelContext* context, const Tensor& g, const Tensor& a,
                Tensor* output) {
+	clock_t startStamp = clock();
     OperateNoTemplate(context, g, a, output);
+	clock_t stopStamp= clock();
+	double period = (double)(stopStamp-startStamp)/CLOCKS_PER_SEC;
+	timer_use::setOpTime(16,period);
   }
 };
 
@@ -95,9 +104,13 @@ class Relu6Op : public UnaryElementWiseOp<T, Relu6Op<Device, T>> {
   using UnaryElementWiseOp<T, Relu6Op<Device, T>>::UnaryElementWiseOp;
 
   void Operate(OpKernelContext* context, const Tensor& input, Tensor* output) {
+	 clock_t startStamp = clock();
     functor::Relu6<Device, T> functor;
     functor(context->eigen_device<Device>(), input.flat<T>(),
             output->flat<T>());
+	clock_t stopStamp= clock();
+	double period = (double)(stopStamp-startStamp)/CLOCKS_PER_SEC;
+	timer_use::setOpTime(16,period);
   }
 };
 
@@ -117,7 +130,11 @@ class Relu6GradOp : public BinaryElementWiseOp<T, Relu6GradOp<Device, T>> {
   template <int NDIMS>
   void Operate(OpKernelContext* context, const Tensor& g, const Tensor& a,
                Tensor* output) {
+	clock_t startStamp = clock();
     OperateNoTemplate(context, g, a, output);
+	clock_t stopStamp= clock();
+	double period = (double)(stopStamp-startStamp)/CLOCKS_PER_SEC;
+	timer_use::setOpTime(16,period);
   }
 };
 
@@ -137,9 +154,13 @@ class EluOp : public UnaryElementWiseOp<T, EluOp<Device, T>> {
   using UnaryElementWiseOp<T, EluOp<Device, T>>::UnaryElementWiseOp;
 
   void Operate(OpKernelContext* context, const Tensor& input, Tensor* output) {
+	clock_t startStamp = clock();
     functor::Elu<Device, T> functor;
     functor(context->eigen_device<Device>(), input.flat<T>(),
             output->flat<T>());
+	clock_t stopStamp= clock();
+	double period = (double)(stopStamp-startStamp)/CLOCKS_PER_SEC;
+	timer_use::setOpTime(16,period);
   }
 };
 
@@ -159,7 +180,12 @@ class EluGradOp : public BinaryElementWiseOp<T, EluGradOp<Device, T>> {
   template <int NDIMS>
   void Operate(OpKernelContext* context, const Tensor& g, const Tensor& a,
                Tensor* output) {
+	clock_t startStamp = clock();
     OperateNoTemplate(context, g, a, output);
+	clock_t stopStamp= clock();
+	double period = (double)(stopStamp-startStamp)/CLOCKS_PER_SEC;
+	timer_use::setOpTime(16,period);
+	
   }
 };
 

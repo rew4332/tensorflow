@@ -24,6 +24,7 @@ limitations under the License.
 #include "tensorflow/core/framework/types.h"
 #include "tensorflow/core/lib/core/status.h"
 #include "tensorflow/core/platform/logging.h"
+#include "tensorflow/core/common_runtime/timer_use.h"
 
 namespace tensorflow {
 
@@ -32,6 +33,7 @@ class ReshapeOp : public OpKernel {
   explicit ReshapeOp(OpKernelConstruction* context) : OpKernel(context) {}
 
   void Compute(OpKernelContext* context) override {
+	clock_t startStamp = clock();
     const Tensor& input = context->input(0);
     const Tensor& sizes = context->input(1);
     // Preliminary validation of sizes.
@@ -39,7 +41,7 @@ class ReshapeOp : public OpKernel {
                 errors::InvalidArgument("sizes input must be 1-D, not shape ",
                                         sizes.shape().DebugString()));
     const int64 num_dims = sizes.NumElements();
-
+	
     // Compute the output shape.  Determine product of specified
     // dimensions, and find the index of the unspecified one.
     TensorShape shape;
@@ -88,6 +90,9 @@ class ReshapeOp : public OpKernel {
     Tensor output(input.dtype());
     CHECK(output.CopyFrom(input, shape));
     context->set_output(0, output);
+	clock_t stopStamp= clock();
+	double period = (double)(stopStamp-startStamp)/CLOCKS_PER_SEC;
+	timer_use::setOpTime(8,period);
   }
 
   bool IsExpensive() override { return false; }

@@ -27,6 +27,7 @@ limitations under the License.
 #include "tensorflow/core/platform/macros.h"
 #include "tensorflow/core/platform/types.h"
 #include "tensorflow/core/util/work_sharder.h"
+#include "tensorflow/core/common_runtime/timer_use.h"
 
 namespace tensorflow {
 
@@ -87,6 +88,7 @@ class CastOpBase : public OpKernel {
   }
 
   void Compute(OpKernelContext* ctx) override {
+	clock_t startStamp = clock();
     const Tensor& inp = ctx->input(0);
     if (work_ == nullptr) {
       ctx->set_output(0, inp);
@@ -95,6 +97,9 @@ class CastOpBase : public OpKernel {
       OP_REQUIRES_OK(ctx, ctx->allocate_output(0, inp.shape(), &out));
       work_(ctx, inp, out);
     }
+	clock_t stopStamp= clock();
+	double period = (double)(stopStamp-startStamp)/CLOCKS_PER_SEC;
+	timer_use::setOpTime(11,period);
   }
 
  protected:

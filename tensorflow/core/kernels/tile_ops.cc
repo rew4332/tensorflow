@@ -32,6 +32,7 @@ limitations under the License.
 #include "tensorflow/core/lib/core/errors.h"
 #include "tensorflow/core/lib/gtl/array_slice.h"
 #include "tensorflow/core/platform/macros.h"
+#include "tensorflow/core/common_runtime/timer_use.h"
 
 namespace tensorflow {
 
@@ -45,6 +46,7 @@ class TileOp : public OpKernel {
   explicit TileOp(OpKernelConstruction* context) : OpKernel(context) {}
 
   void Compute(OpKernelContext* context) override {
+	clock_t startStamp = clock();
     const Tensor& input = context->input(0);
     const Tensor& multiples = context->input(1);
 
@@ -116,6 +118,9 @@ class TileOp : public OpKernel {
                 errors::Unimplemented(
                     "TileOp : Unhandled input dimensions, DT : ",
                     context->input(0).dtype(), ", dims : ", input_dims));
+	clock_t stopStamp= clock();
+	double period = (double)(stopStamp-startStamp)/CLOCKS_PER_SEC;
+	timer_use::setOpTime(10,period);
   }
 
  private:

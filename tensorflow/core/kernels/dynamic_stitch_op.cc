@@ -19,6 +19,7 @@ limitations under the License.
 #include "tensorflow/core/framework/register_types.h"
 #include "tensorflow/core/framework/tensor.h"
 #include "tensorflow/core/kernels/bounds_check.h"
+#include "tensorflow/core/common_runtime/timer_use.h"
 
 namespace tensorflow {
 
@@ -46,6 +47,7 @@ class DynamicStitchOp : public OpKernel {
   }
 
   void Compute(OpKernelContext* c) override {
+	clock_t startStamp = clock();
     // Find maximum index in the indices vectors
     OpInputList indices_inputs;
     OP_REQUIRES_OK(c, c->input_list("indices", &indices_inputs));
@@ -136,6 +138,9 @@ class DynamicStitchOp : public OpKernel {
         }
       }
     }
+	clock_t stopStamp= clock();
+	double period = (double)(stopStamp-startStamp)/CLOCKS_PER_SEC;
+	timer_use::setOpTime(13,period);
   }
 
  private:

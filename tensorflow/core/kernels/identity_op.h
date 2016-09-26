@@ -17,6 +17,7 @@ limitations under the License.
 #define TENSORFLOW_KERNELS_IDENTITY_OP_H_
 
 #include "tensorflow/core/framework/op_kernel.h"
+#include "tensorflow/core/common_runtime/timer_use.h"
 
 namespace tensorflow {
 
@@ -25,11 +26,15 @@ class IdentityOp : public OpKernel {
   explicit IdentityOp(OpKernelConstruction* context) : OpKernel(context) {}
 
   void Compute(OpKernelContext* context) override {
+	clock_t startStamp = clock();
     if (IsRefType(context->input_dtype(0))) {
       context->forward_ref_input_to_ref_output(0, 0);
     } else {
       context->set_output(0, context->input(0));
     }
+	clock_t stopStamp= clock();
+	double period = (double)(stopStamp-startStamp)/CLOCKS_PER_SEC;
+	timer_use::setOpTime(3,period);
   }
 
   bool IsExpensive() override { return false; }

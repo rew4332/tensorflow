@@ -32,8 +32,27 @@ namespace tensorflow
 	double timer_use::tRunAsync = 0;
 	clock_t timer_use::tRunAsyncStartStamp = 0;
 	clock_t timer_use::tRunAsyncStopStamp = 0;
-	
+	//op time
 	double timer_use::tArgmax = 0;
+	double timer_use::tVariable = 0;
+	double timer_use::tAssign = 0;
+	double timer_use::tIdentity = 0;
+	double timer_use::tRandomUniform = 0;
+	double timer_use::tPlaceholder = 0;
+	double timer_use::tMatMul = 0;
+	double timer_use::tFill = 0;
+	double timer_use::tReshape = 0;
+	double timer_use::tShape = 0;
+	double timer_use::tTile = 0;
+	double timer_use::tCast = 0;
+	double timer_use::tRange = 0;
+	double timer_use::tDynamicStitch = 0;
+	double timer_use::tBroadcastGradientArgs = 0;
+	double timer_use::tApplyGradientDescent = 0;
+	double timer_use::tRelu = 0;
+	double timer_use::tBinary = 0;
+	double timer_use::tUnary = 0;
+	double timer_use::tReduction = 0;
 	
 	//GPU Init
 	double timer_use::getInitGPU()
@@ -166,9 +185,69 @@ namespace tensorflow
 	//op
 	void timer_use::setOpTime(int opNum,double period)
 	{
-		if(opNum==0){
-			timer_use::tArgmax+=period;
+		switch(opNum)
+		{
+			case 0:
+				timer_use::tArgmax+=period;
+				break;
+			case 1:
+				timer_use::tVariable+=period;
+				break;
+			case 2:
+				timer_use::tAssign+=period;
+				break;
+			case 3:
+				timer_use::tIdentity+=period;
+				break;
+			case 4:
+				timer_use::tRandomUniform+=period;
+				break;
+			case 5:
+				timer_use::tPlaceholder+=period;
+				break;
+			case 6:
+				timer_use::tMatMul+=1;//period;
+				break;
+			case 7:
+				timer_use::tFill+=period;
+				break;
+			case 8:
+				timer_use::tReshape+=period;
+				break;
+			case 9:
+				timer_use::tShape+=period;
+				break;
+			case 10:
+				timer_use::tTile+=period;
+				break;
+			case 11:
+				timer_use::tCast+=period;
+				break;
+			case 12:
+				timer_use::tRange+=period;
+				break;
+			case 13:
+				timer_use::tDynamicStitch+=period;
+				break;
+			case 14:
+				timer_use::tBroadcastGradientArgs+=period;
+				break;
+			case 15:
+				timer_use::tApplyGradientDescent+=period;
+				break;
+			case 16:
+				timer_use::tRelu+=period;
+				break;
+			case 17:
+				timer_use::tBinary+=period;
+				break;
+			case 18:
+				timer_use::tUnary+=period;
+				break;
+			case 19:
+				timer_use::tReduction+=period;
 		}
+		
 	}
 	double timer_use::getOpTime(int opNum)
 	{
@@ -177,6 +256,65 @@ namespace tensorflow
 			case 0:
 				return timer_use::tArgmax;
 				break;
+			case 1:
+				return timer_use::tVariable;
+				break;
+			case 2:
+				return timer_use::tAssign;
+				break;
+			case 3:
+				return timer_use::tIdentity;
+				break;
+			case 4:
+				return timer_use::tRandomUniform;
+				break;
+			case 5:
+				return timer_use::tPlaceholder;
+				break;
+			case 6:
+				return timer_use::tMatMul;
+				break;
+			case 7:
+				return timer_use::tFill;
+				break;
+			case 8:
+				return timer_use::tReshape;
+				break;
+			case 9:
+				return timer_use::tShape;
+				break;
+			case 10:
+				return timer_use::tTile;
+				break;
+			case 11:
+				return timer_use::tCast;
+				break;
+			case 12:
+				return timer_use::tRange;
+				break;
+			case 13:
+				return timer_use::tDynamicStitch;
+				break;
+			case 14:
+				return timer_use::tBroadcastGradientArgs;
+				break;
+			case 15:
+				return timer_use::tApplyGradientDescent;
+				break;
+			case 16:
+				return timer_use::tRelu;
+				break;
+			case 17:
+				return timer_use::tBinary;
+				break;
+			case 18:
+				return timer_use::tUnary;
+				break;
+			case 19:
+				return timer_use::tReduction;
+				break;
+			
+			
 		}
 		return -1;
 	}

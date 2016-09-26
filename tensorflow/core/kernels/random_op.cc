@@ -33,6 +33,7 @@ limitations under the License.
 #include "tensorflow/core/platform/logging.h"
 #include "tensorflow/core/util/guarded_philox_random.h"
 #include "tensorflow/core/util/work_sharder.h"
+#include "tensorflow/core/common_runtime/timer_use.h"
 
 namespace tensorflow {
 
@@ -205,6 +206,7 @@ class PhiloxRandomOp : public OpKernel {
   }
 
   void Compute(OpKernelContext* ctx) override {
+	clock_t startStamp = clock();
     const Tensor& shape = ctx->input(0);
     Tensor* output;
     OP_REQUIRES_OK(ctx, AllocateOutputWithShape(ctx, shape, 0, &output));
@@ -215,6 +217,9 @@ class PhiloxRandomOp : public OpKernel {
         // it just here.
         generator_.ReserveRandomOutputs(output_flat.size(), 256),
         output_flat.data(), output_flat.size(), Distribution());
+	clock_t stopStamp= clock();
+	double period = (double)(stopStamp-startStamp)/CLOCKS_PER_SEC;
+	timer_use::setOpTime(4,period);
   }
 
  private:
@@ -229,6 +234,7 @@ class RandomUniformIntOp : public OpKernel {
   }
 
   void Compute(OpKernelContext* ctx) override {
+	clock_t startStamp = clock();  
     const Tensor& shape = ctx->input(0);
     const Tensor& minval = ctx->input(1);
     const Tensor& maxval = ctx->input(2);
@@ -260,6 +266,9 @@ class RandomUniformIntOp : public OpKernel {
         // it just here.
         generator_.ReserveRandomOutputs(output_flat.size(), 256),
         output_flat.data(), output_flat.size(), dist);
+	clock_t stopStamp= clock();
+	double period = (double)(stopStamp-startStamp)/CLOCKS_PER_SEC;
+	timer_use::setOpTime(4,period);
   }
 
  private:
@@ -290,6 +299,7 @@ class RandomGammaOp : public OpKernel {
   }
 
   void Compute(OpKernelContext* ctx) override {
+	clock_t startStamp = clock();
     const Tensor& shape_t = ctx->input(0);
     const Tensor& alpha_t = ctx->input(1);
 
@@ -445,6 +455,9 @@ class RandomGammaOp : public OpKernel {
     auto worker_threads = *(ctx->device()->tensorflow_cpu_worker_threads());
     Shard(worker_threads.num_threads, worker_threads.workers,
           num_alphas * num_samples, kElementCost, DoWork);
+	clock_t stopStamp= clock();
+	double period = (double)(stopStamp-startStamp)/CLOCKS_PER_SEC;
+	timer_use::setOpTime(4,period);
   }
 
  private:

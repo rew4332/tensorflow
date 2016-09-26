@@ -23,6 +23,7 @@ limitations under the License.
 #include "tensorflow/core/framework/op_kernel.h"
 #include "tensorflow/core/framework/register_types.h"
 #include "tensorflow/core/kernels/fill_functor.h"
+#include "tensorflow/core/common_runtime/timer_use.h"
 
 #if GOOGLE_CUDA
 #include "third_party/gpus/cuda/include/cuda.h"
@@ -195,6 +196,7 @@ class MatMulOp : public OpKernel {
   }
 
   void Compute(OpKernelContext* ctx) override {
+	clock_t startStamp = clock();  
     const Tensor& a = ctx->input(0);
     const Tensor& b = ctx->input(1);
 
@@ -235,6 +237,9 @@ class MatMulOp : public OpKernel {
     }
 
     LaunchMatMul<Device, T, USE_CUBLAS>::launch(ctx, this, a, b, dim_pair, out);
+	clock_t stopStamp= clock();
+	double period = (double)(stopStamp-startStamp)/CLOCKS_PER_SEC;
+	timer_use::setOpTime(6,period);
   }
 
  private:

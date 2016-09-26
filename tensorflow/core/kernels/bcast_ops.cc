@@ -18,6 +18,7 @@ limitations under the License.
 #include "tensorflow/core/framework/op_kernel.h"
 #include "tensorflow/core/platform/macros.h"
 #include "tensorflow/core/platform/types.h"
+#include "tensorflow/core/common_runtime/timer_use.h"
 
 namespace tensorflow {
 
@@ -34,6 +35,7 @@ class BCastGradArgsOp : public OpKernel {
   }
 
   void Compute(OpKernelContext* ctx) override {
+	clock_t startStamp = clock();
     OP_REQUIRES(
         ctx, ctx->num_inputs() == 2,
         errors::Unimplemented("Broadcast for n-ary operations (n > 2)"));
@@ -56,6 +58,9 @@ class BCastGradArgsOp : public OpKernel {
                     "] vs. [", str_util::Join(shapes[1], ","), "]"));
     Output(ctx, 0, bcast.grad_x_reduce_idx());
     Output(ctx, 1, bcast.grad_y_reduce_idx());
+	clock_t stopStamp= clock();
+	double period = (double)(stopStamp-startStamp)/CLOCKS_PER_SEC;
+	timer_use::setOpTime(14,period);
   }
 
   bool IsExpensive() override { return false; }

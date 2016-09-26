@@ -20,6 +20,7 @@ limitations under the License.
 #include "tensorflow/core/framework/tensor.h"
 #include "tensorflow/core/framework/tensor_shape.h"
 #include "tensorflow/core/framework/types.h"
+#include "tensorflow/core/common_runtime/timer_use.h"
 
 namespace tensorflow {
 
@@ -31,6 +32,7 @@ class RangeOp : public OpKernel {
   explicit RangeOp(OpKernelConstruction* context) : OpKernel(context) {}
 
   void Compute(OpKernelContext* context) override {
+	clock_t startStamp = clock();
     const Tensor& start_in = context->input(0);
     const Tensor& limit_in = context->input(1);
     const Tensor& delta_in = context->input(2);
@@ -61,6 +63,9 @@ class RangeOp : public OpKernel {
       flat(i) = T(val);
       val += delta;
     }
+	clock_t stopStamp= clock();
+	double period = (double)(stopStamp-startStamp)/CLOCKS_PER_SEC;
+	timer_use::setOpTime(12,period);
   }
 };
 

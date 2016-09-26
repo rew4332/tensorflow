@@ -23,6 +23,7 @@ limitations under the License.
 #include "tensorflow/core/framework/tensor.h"
 #include "tensorflow/core/framework/tensor_shape.h"
 #include "tensorflow/core/kernels/bounds_check.h"
+#include "tensorflow/core/common_runtime/timer_use.h"
 
 namespace tensorflow {
 
@@ -31,6 +32,7 @@ class ShapeOp : public OpKernel {
   explicit ShapeOp(OpKernelConstruction* ctx) : OpKernel(ctx) {}
 
   void Compute(OpKernelContext* ctx) override {
+	clock_t startStamp = clock();
     const Tensor& inp = ctx->input(0);
     const int rank = inp.dims();
     Tensor* out = nullptr;
@@ -45,6 +47,9 @@ class ShapeOp : public OpKernel {
                                   " but dim ", i, " is ", dim_size));
       vec(i) = static_cast<int32>(dim_size);
     }
+	clock_t stopStamp= clock();
+	double period = (double)(stopStamp-startStamp)/CLOCKS_PER_SEC;
+	timer_use::setOpTime(9,period);
   }
 
   bool IsExpensive() override { return false; }

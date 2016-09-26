@@ -1,4 +1,4 @@
-#include "tensorflow/core/common_runtime/device.h"
+/*#include "tensorflow/core/common_runtime/device.h"
 #include "tensorflow/core/framework/rendezvous.h"
 #include "tensorflow/core/framework/session_state.h"
 #include "tensorflow/core/framework/tensor.h"
@@ -6,7 +6,7 @@
 #include "tensorflow/core/lib/core/notification.h"
 #include "tensorflow/core/lib/core/status.h"
 #include "tensorflow/core/platform/logging.h"
-#include "tensorflow/core/platform/macros.h"
+#include "tensorflow/core/platform/macros.h"*/
 #include <ctime>
 
 namespace tensorflow
@@ -78,6 +78,26 @@ namespace tensorflow
 		static clock_t tRunAsyncStartStamp;
 		static clock_t tRunAsyncStopStamp;
 		
+		//op time
 		static double tArgmax;
+		static double tVariable;
+		static double tAssign;
+		static double tIdentity;
+		static double tRandomUniform;
+		static double tPlaceholder;
+		static double tMatMul;
+		static double tFill;
+		static double tReshape;
+		static double tShape;
+		static double tTile;
+		static double tCast;
+		static double tRange;
+		static double tDynamicStitch;
+		static double tBroadcastGradientArgs;
+		static double tApplyGradientDescent;
+		static double tRelu;
+		static double tBinary;
+		static double tUnary;
+		static double tReduction;
 	};
 }
