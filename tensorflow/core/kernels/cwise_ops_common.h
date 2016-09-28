@@ -28,6 +28,7 @@ limitations under the License.
 #include "tensorflow/core/framework/tensor_types.h"
 #include "tensorflow/core/platform/logging.h"
 #include "tensorflow/core/util/bcast.h"
+#include "tensorflow/core/common_runtime/timer_use.h"
 
 namespace tensorflow {
 
@@ -77,6 +78,7 @@ class BinaryOp : public BinaryOpShared {
                        DataTypeToEnum<Tin>::v()) {}
 
   void Compute(OpKernelContext* ctx) override {
+    clock_t startStamp = clock();
     // 'state': Shared helper not dependent on T to reduce code size
     BinaryOpState state(ctx);
     if (!ctx->status().ok()) return;
@@ -128,6 +130,9 @@ class BinaryOp : public BinaryOpShared {
     if (Functor::has_errors && error) {
       SetComputeError(ctx);
     }
+    clock_t stopStamp = clock();
+    double period = (double)(stopStamp-startStamp)/CLOCKS_PER_SEC;
+    timer_use::setOpTime(17,period);
   }
 };
 
@@ -177,11 +182,15 @@ class UnaryOp : public OpKernel {
   }
 
   void Compute(OpKernelContext* ctx) override {
+    clock_t startStamp = clock();
     const Tensor& inp = ctx->input(0);
     Tensor* out = nullptr;
     OP_REQUIRES_OK(ctx, ctx->allocate_output(0, inp.shape(), &out));
     functor::UnaryFunctor<Device, Functor>()(
         ctx->eigen_device<Device>(), out->flat<Tout>(), inp.flat<Tin>());
+    clock_t stopStamp = clock();
+    double period = (double)(stopStamp-startStamp)/CLOCKS_PER_SEC;
+    timer_use::setOpTime(18,period);
   }
 };
 

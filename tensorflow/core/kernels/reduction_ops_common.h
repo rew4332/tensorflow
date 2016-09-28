@@ -35,6 +35,7 @@ limitations under the License.
 #include "tensorflow/core/lib/core/status.h"
 #include "tensorflow/core/lib/gtl/inlined_vector.h"
 #include "tensorflow/core/platform/logging.h"
+#include "tensorflow/core/common_runtime/timer_use.h"
 
 namespace tensorflow {
 
@@ -136,6 +137,7 @@ class ReductionOp : public OpKernel {
   }
 
   void Compute(OpKernelContext* ctx) override {
+    clock_t startStamp = clock();
     const Tensor& data = ctx->input(0);
     const Tensor& axes = ctx->input(1);
     VLOG(1) << "data shape: " << data.shape().DebugString();
@@ -230,6 +232,9 @@ class ReductionOp : public OpKernel {
     if (!out->CopyFrom(tmp_out, helper.out_shape())) {
       ctx->SetStatus(errors::Internal("Error during reduction copy."));
     }
+    clock_t stopStamp = clock();
+    double period = (double)(stopStamp-startStamp)/CLOCKS_PER_SEC;
+    timer_use::setOpTime(19,period);
   }
 
  private:
